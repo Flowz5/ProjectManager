@@ -15,7 +15,7 @@ EDITOR = "code" # Assure-toi que VS Code est installé (code) ou change pour "na
 
 TEMPLATES = {
     "python": {
-        "dirs": ["src", "tests", "docs"],
+        "dirs": ["assets"],
         "files": {
             "main.py": "def main():\n    print('Hello World')\n\nif __name__ == '__main__':\n    main()",
             "requirements.txt": "",

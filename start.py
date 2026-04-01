@@ -20,7 +20,7 @@ TEMPLATES = {
             "main.py": "def main():\n    print('Hello World')\n\nif __name__ == '__main__':\n    main()",
             "requirements.txt": "",
             ".gitignore": "__pycache__/\nvenv/\n.env",
-            "README.md": "# {name}\n\nProject created automatically."
+            "README.md": "# {name}\n\nProjet Python classique."
         },
         "commands": ["python -m venv venv"]
     },
@@ -28,11 +28,48 @@ TEMPLATES = {
         "dirs": ["assets/img", "assets/css", "assets/js"],
         "files": {
             "index.html": "<!DOCTYPE html>\n<html lang='fr'>\n<head>\n    <meta charset='UTF-8'>\n    <title>{name}</title>\n    <link rel='stylesheet' href='assets/css/style.css'>\n</head>\n<body>\n    <h1>Welcome to {name}</h1>\n    <script src='assets/js/app.js'></script>\n</body>\n</html>",
-            "assets/css/style.css": "body {{ font-family: sans-serif; }}", 
+            "assets/css/style.css": "body {{ font-family: sans-serif; background-color: #1a1a1a; color: white; }}", 
             "assets/js/app.js": "console.log('App loaded');",
-            "README.md": "# {name}\n\nSite web généré."
+            "README.md": "# {name}\n\nSite web HTML/CSS/JS statique."
         },
         "commands": []
+    },
+    "discord-bot": {
+        "dirs": ["cogs", "data"],
+        "files": {
+            "bot.py": "import os\nimport discord\nfrom discord.ext import commands\nfrom dotenv import load_dotenv\n\nload_dotenv()\nTOKEN = os.getenv('DISCORD_TOKEN')\n\nintents = discord.Intents.default()\nintents.message_content = True\nbot = commands.Bot(command_prefix='!', intents=intents)\n\n@bot.event\nasync def on_ready():\n    print(f'Connecté en tant que {{bot.user}}')\n\nbot.run(TOKEN)",
+            "requirements.txt": "discord.py\npython-dotenv\nrequests",
+            ".env": "DISCORD_TOKEN=ton_token_ici",
+            ".gitignore": "__pycache__/\nvenv/\n.env\ndata/\n*.sqlite3",
+            "Dockerfile": "FROM python:3.9-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nCOPY . .\nCMD [\"python\", \"bot.py\"]",
+            "docker-compose.yml": "services:\n  {name}-bot:\n    build: .\n    container_name: {name}_container\n    restart: unless-stopped",
+            "README.md": "# Bot Discord : {name}\n\nPour lancer : `docker compose up -d --build`"
+        },
+        "commands": ["python -m venv venv"]
+    },
+    "fastapi": {
+        "dirs": ["app/routers", "app/models", "tests"],
+        "files": {
+            "app/main.py": "from fastapi import FastAPI\n\napp = FastAPI(title='{name}')\n\n@app.get('/')\ndef read_root():\n    return {{'message': 'API en ligne !'}}",
+            "requirements.txt": "fastapi\nuvicorn\npydantic",
+            ".gitignore": "__pycache__/\nvenv/\n.env",
+            "run.sh": "#!/bin/bash\n# Lancer le serveur de développement\nuvicorn app.main:app --reload",
+            "README.md": "# API : {name}\n\nLancer avec : `./run.sh`"
+        },
+        "commands": ["python -m venv venv", "chmod +x run.sh"]
+    },
+    "javafx": {
+        "dirs": ["src/main/java/com/app", "src/main/resources/com/app"],
+        "files": {
+            "pom.xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <groupId>com.app</groupId>\n  <artifactId>{name}</artifactId>\n  <version>1.0.0</version>\n  <properties>\n    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    <maven.compiler.source>21</maven.compiler.source>\n    <maven.compiler.target>21</maven.compiler.target>\n  </properties>\n  <dependencies>\n    <dependency>\n      <groupId>org.openjfx</groupId>\n      <artifactId>javafx-controls</artifactId>\n      <version>21</version>\n    </dependency>\n  </dependencies>\n  <build>\n    <plugins>\n      <plugin>\n        <groupId>org.openjfx</groupId>\n        <artifactId>javafx-maven-plugin</artifactId>\n        <version>0.0.8</version>\n        <configuration>\n          <mainClass>com.app/com.app.App</mainClass>\n        </configuration>\n      </plugin>\n      <plugin>\n        <groupId>org.codehaus.mojo</groupId>\n        <artifactId>exec-maven-plugin</artifactId>\n        <version>3.1.0</version>\n        <configuration>\n          <mainClass>com.app.App</mainClass>\n        </configuration>\n      </plugin>\n    </plugins>\n  </build>\n</project>",
+            "src/main/java/com/app/App.java": "package com.app;\n\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.control.Label;\nimport javafx.scene.layout.StackPane;\nimport javafx.stage.Stage;\n\npublic class App extends Application {{\n    @Override\n    public void start(Stage stage) {{\n        var javaVersion = SystemInfo.javaVersion();\n        var javafxVersion = SystemInfo.javafxVersion();\n        var label = new Label(\"Hello, JavaFX \" + javafxVersion + \", running on Java \" + javaVersion + \".\");\n        var scene = new Scene(new StackPane(label), 640, 480);\n        \n        try {{\n            scene.getStylesheets().add(getClass().getResource(\"style.css\").toExternalForm());\n        }} catch(Exception e) {{\n            System.out.println(\"CSS par défaut\");\n        }}\n\n        stage.setScene(scene);\n        stage.show();\n    }}\n\n    public static void main(String[] args) {{\n        launch();\n    }}\n}}",
+            "src/main/java/com/app/SystemInfo.java": "package com.app;\n\npublic class SystemInfo {{\n    public static String javaVersion() {{\n        return System.getProperty(\"java.version\");\n    }}\n    public static String javafxVersion() {{\n        return System.getProperty(\"javafx.version\");\n    }}\n}}",
+            "src/main/java/module-info.java": "module com.app {{\n    requires javafx.controls;\n    exports com.app;\n}}",
+            "src/main/resources/com/app/style.css": ".root {{ -fx-background-color: #1e1e2e; }}\n.label {{ -fx-text-fill: white; -fx-font-size: 16px; }}",
+            "run.sh": "#!/bin/bash\npkill -9 java 2>/dev/null\nexport GDK_BACKEND=x11\nexport _JAVA_AWT_WM_NONREPARENTING=1\nexport JAVA_TOOL_OPTIONS=\"-Dprism.order=sw\"\necho \"🚀 Lancement JavaFX...\"\nmvn clean compile exec:java -Dexec.mainClass=\"com.app.App\"",
+            "README.md": "# Application JavaFX : {name}\n\nPour lancer sous Linux/Hyprland sans crash :\n`./run.sh`"
+        },
+        "commands": ["chmod +x run.sh"]
     }
 }
 
@@ -122,7 +159,10 @@ def main():
     parser = argparse.ArgumentParser(description="Générateur de projet rapide.")
     
     parser.add_argument("name", nargs="?", help="Nom du projet")
-    parser.add_argument("--type", choices=["python", "web"], default="python", help="Type de projet")
+# Récupère dynamiquement la liste des templates disponibles (python, web, discord-bot, etc.)
+    available_templates = list(TEMPLATES.keys())
+    
+    parser.add_argument("--type", choices=available_templates, default="python", help="Type de projet")
     parser.add_argument("--github", "-gh", action="store_true", help="Créer le dépôt sur GitHub automatiquement")
     
     args = parser.parse_args()
@@ -132,8 +172,13 @@ def main():
     use_github = args.github
 
     # Mode Interactif
+    # Mode Interactif
     if not project_name:
-        console.print(f"[bold]Création d'un projet [cyan]{project_type.upper()}[/cyan][/bold]")
+        console.print(f"[bold]Création d'un projet...[/bold]")
+        
+        # Demander le type si ce n'est pas le défaut "python" qu'on veut
+        project_type = Prompt.ask("👉 [bold green]Type de projet ?[/bold green]", choices=available_templates, default="python")
+        
         while not project_name:
             project_name = Prompt.ask("👉 [bold green]Nom du projet ?[/bold green]")
             

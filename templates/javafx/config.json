@@ -1,0 +1,9 @@
+{
+    "dirs": [
+        "src/main/java/com/app",
+        "src/main/resources/com/app"
+    ],
+    "commands": [
+        "chmod +x run.sh"
+    ]
+}

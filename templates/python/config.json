@@ -1,0 +1,8 @@
+{
+    "dirs": [
+        "assets"
+    ],
+    "commands": [
+        "python -m venv venv"
+    ]
+}

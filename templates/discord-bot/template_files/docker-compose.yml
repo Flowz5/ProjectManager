@@ -1,0 +1,5 @@
+services:
+  {name}-bot:
+    build: .
+    container_name: {name}_container
+    restart: unless-stopped

@@ -1,0 +1,3 @@
+# {name}
+
+Projet Python classique.

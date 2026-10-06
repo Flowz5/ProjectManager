@@ -1,0 +1,11 @@
+{
+    "dirs": [
+        "app/routers",
+        "app/models",
+        "tests"
+    ],
+    "commands": [
+        "python -m venv venv",
+        "chmod +x run.sh"
+    ]
+}

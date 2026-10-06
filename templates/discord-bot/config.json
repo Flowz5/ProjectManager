@@ -1,0 +1,9 @@
+{
+    "dirs": [
+        "cogs",
+        "data"
+    ],
+    "commands": [
+        "python -m venv venv"
+    ]
+}

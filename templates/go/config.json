@@ -1,0 +1,5 @@
+{
+    "dirs": [],
+    "commands": ["go mod init {name}"],
+    "description": "Projet Go basique"
+}

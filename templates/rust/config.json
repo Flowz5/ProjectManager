@@ -1,0 +1,5 @@
+{
+    "dirs": [],
+    "commands": ["cargo init --bin ."],
+    "description": "Projet Rust standard (Cargo)"
+}

@@ -1,0 +1,5 @@
+{
+    "dirs": [],
+    "commands": ["npx create-next-app@latest . --use-npm --yes"],
+    "description": "Projet Next.js complet"
+}

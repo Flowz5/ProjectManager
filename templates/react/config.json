@@ -1,0 +1,5 @@
+{
+    "dirs": [],
+    "commands": ["npm create vite@latest . -- --template react", "npm install"],
+    "description": "Projet React JS via Vite"
+}

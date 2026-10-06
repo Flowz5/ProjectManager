@@ -1,121 +1,112 @@
-
-# ⚡ Lazy-Start : Project Scaffolder
+# ⚡ Lazy-Start : Project Scaffolder & Manager
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Fedora](https://img.shields.io/badge/Fedora-Linux-blue?style=for-the-badge&logo=fedora&logoColor=white)
+![Arch Linux](https://img.shields.io/badge/Arch_Linux-blue?style=for-the-badge&logo=archlinux&logoColor=white)
 ![Automation](https://img.shields.io/badge/Focus-Productivity-green?style=for-the-badge)
 
-**Lazy-Start** est un outil CLI (Command Line Interface) d'automatisation pour développeurs.
-Il permet d'initialiser un environnement de développement complet en une seule commande : structure de dossiers, fichiers de base, environnement virtuel, git local et création du dépôt distant GitHub.
+**Lazy-Start** est un outil CLI d'automatisation et de gestion de projets ultra-rapide.
+Il initialise un environnement de développement complet en une commande : structure de dossiers, fichiers de base, git local, installation des dépendances, création du dépôt GitHub et ouverture de votre IDE.
+
+Il s'intègre également parfaitement avec des environnements modernes (Wayland, Hyprland, Zoxide, Rofi) pour créer un workflow de productivité instantané.
 
 ---
 
-## 🚀 Fonctionnalités Clés
+## 🚀 Templates Disponibles (Modulaires)
 
-* **Templates Intelligents** :
-    * 🐍 **Python** : Crée l'arborescence, `main.py`, `.gitignore` et **initialise automatiquement le venv**.
-    * 🌐 **Web** : Génère un squelette HTML5 / CSS3 / JS prêt à l'emploi.
-* **GitHub Integration** : Crée le dépôt public sur votre compte GitHub, lie le remote et push le premier commit (via flag `--github`).
-* **Auto-Sanitization** : Nettoie automatiquement les noms de projets (ex: "Mon Super Projet!" ➡️ `mon_super_projet`).
-* **Workflow Rapide** : Initialise Git, configure la branche `main` et **ouvre VS Code** automatiquement.
+L'architecture est 100% modulaire (basée sur des dossiers dans `/templates`). Les templates actuels incluent :
+* 🐍 **Python** (Génère `main.py`, `.gitignore` et initialise un *venv*)
+* 🦀 **Rust** (Via `cargo init`)
+* 🐹 **Go** (Via `go mod init`)
+* ⚛️ **React** (Génère un projet via ViteJS + `npm install`)
+* ▲ **Next.js** (Squelette Next.js complet)
+* ⚙️ **C++** (Structure CMake basique)
+* ☕ **JavaFX** (Projet Maven + CSS)
+* 🤖 **Discord Bot** (Bot Python + Docker Compose)
+* 🌐 **Web Basique** (HTML5 / CSS3 / JS pur)
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Installation & Configuration
 
 ### 1. Pré-requis
 * Python 3
-* **GitHub CLI** (`gh`) pour l'intégration distante.
+* **GitHub CLI** (`gh`) (Optionnel, pour la création auto du repo)
 
-Sur Fedora :
 ```bash
-sudo dnf install gh
-gh auth login  # À faire une seule fois pour connecter votre compte
-
+sudo pacman -S github-cli
+gh auth login
 ```
 
-### 2. Installation du script
+### 2. Installation de l'outil
 
 ```bash
-# Cloner le dépôt
-git clone [https://github.com/VOTRE_USERNAME/ProjectManager.git](https://github.com/VOTRE_USERNAME/ProjectManager.git)
-cd ProjectManager
-
-# Créer l'environnement virtuel pour le script lui-même
+git clone https://github.com/Flowz5/ProjectManager.git ~/ProjectManager
+cd ~/ProjectManager
 python -m venv venv
 source venv/bin/activate
-
-# Installer la librairie d'interface (Rich)
 pip install rich
-
 ```
 
-### 3. Configuration (Alias)
-
-Pour utiliser la commande `new` partout, ajoutez cet alias dans votre `.bashrc` ou `.zshrc` :
-
+### 3. Alias CLI (`~/.zshrc`)
+Pour utiliser l'outil n'importe où via la commande `new` :
 ```bash
-# Remplacez /chemin/vers/ par votre vrai chemin
-alias new="/chemin/vers/ProjectManager/venv/bin/python /chemin/vers/ProjectManager/start.py"
-
+alias new="$HOME/ProjectManager/venv/bin/python $HOME/ProjectManager/start.py"
 ```
 
 ---
 
-## 📘 Guide d'Utilisation
+## 🎯 Le Workflow Ultime (Hyprland + Rofi + Zoxide)
 
-L'outil s'utilise via l'alias `new`. Le projet est toujours créé dans le **dossier courant** de votre terminal.
+Au lieu de naviguer dans les dossiers avec `cd`, vous pouvez utiliser ce script pour **sauter de projet en projet, ou en créer un nouveau à la volée** !
 
-### 1. Mode Interactif (Recommandé)
+**Pré-requis** : `zoxide`, `rofi` (ou `rofi-wayland`), `kitty`, `zellij`.
 
-Lancez la commande sans argument pour être guidé.
-
-```bash
-new
-
-```
-
-* ❓ **Questions :** Nom du projet ? Création GitHub (O/N) ?
-* ℹ️ **Défaut :** Crée un projet Python si le type n'est pas précisé.
-
-### 2. Commandes Rapides
-
-| Action | Commande | Description |
-| --- | --- | --- |
-| **Projet Python** | `new MonScript` | Crée un projet Python + Venv localement. |
-| **Projet Web** | `new MonSite --type web` | Crée un projet HTML/CSS/JS localement. |
-| **Full GitHub** | `new MonProjet --github` | Crée le projet local + **Repo GitHub distant** + Push. |
-| **Raccourci** | `new MonProjet -gh` | Idem que ci-dessus (alias court). |
-
-### 3. Exemple de flux (Workflow)
+### 1. Le script `jump_project.sh`
+Créez un script `~/.local/bin/jump_project.sh` et rendez-le exécutable (`chmod +x`) :
 
 ```bash
-# 1. Je vais dans mon dossier de travail
-cd ~/Documents/Dev
+#!/bin/bash
 
-# 2. Je lance la création d'un projet web avec hébergement GitHub
-new "Portfolio 2026" --type web -gh
+# 1. Zoxide liste les projets, Rofi affiche l'interface
+TARGET=$(zoxide query -l | rofi -dmenu -i -p "🚀 Projet (ou Créer)")
 
-# Résultat :
-# > Dossier 'portfolio_2026' créé (nom nettoyé).
-# > Fichiers HTML/CSS générés.
-# > Repo GitHub 'portfolio_2026' créé et synchronisé.
-# > VS Code s'ouvre.
+if [ -z "$TARGET" ]; then
+    exit 0
+fi
 
+if [ -d "$TARGET" ]; then
+    # 2A. Le projet existe : on l'ouvre directement avec Zellij
+    kitty -d "$TARGET" -e zellij &
+else
+    # 2B. Nouveau projet : on nettoie le nom et on le crée à la racine du HOME
+    CLEAN_NAME=$(echo "$TARGET" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | sed 's/[^a-z0-9_]//g')
+    NEW_DIR="$HOME/$CLEAN_NAME"
+
+    # Lance Lazy-Start (ProjectManager) puis ouvre Zellij dans le nouveau dossier
+    kitty -d "$HOME" -e zsh -c "$HOME/ProjectManager/start.py '$TARGET'; cd '$NEW_DIR' 2>/dev/null && exec zellij" &
+fi
 ```
+
+### 2. Le raccourci Hyprland (`hyprland.conf`)
+Associez le script à un raccourci clavier (ex: `Win + D`) :
+```lua
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.local/bin/jump_project.sh"))
+```
+**Résultat :** Faites `Win + D`, tapez un nom. S'il existe, vous y êtes. S'il n'existe pas, l'outil vous demande quel template utiliser, génère le code, et ouvre votre éditeur + votre multiplexeur dedans !
 
 ---
 
-## ⚙️ Structure du Projet
+## ⚙️ Architecture & Ajout de Templates
 
-Le script repose sur un dictionnaire de templates extensible dans `start.py`.
-
-```python
-TEMPLATES = {
-    "python": { "dirs": [...], "files": {...}, "commands": ["python -m venv venv"] },
-    "web": { ... }
+Le code source a été refactorisé pour être **100% scalable**. Pour ajouter un nouveau template (ex: `vuejs`) :
+1. Créez le dossier : `templates/vuejs/template_files/`
+2. Mettez-y tous vos fichiers de base. (Le script remplacera `{name}` par le nom du projet).
+3. Créez un `config.json` dans `templates/vuejs/` :
+```json
+{
+    "dirs": ["assets", "src"],
+    "commands": ["npm init vue@latest .", "npm install"],
+    "description": "Mon projet VueJS"
 }
-
 ```
-
-*Vous pouvez facilement ajouter des templates (C++, Java, Node.js) en modifiant ce dictionnaire.*
+L'outil détectera automatiquement le template `vuejs` !
